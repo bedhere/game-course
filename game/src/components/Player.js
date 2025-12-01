@@ -11,11 +11,11 @@ export const player = new THREE.Group();
             flatShading: true,
         })
     );
-    body.position.z = 10;
+    body.position.z = 0;
     player.add(body);
 
     // Initial position
-    player.position.set(0, 0, 0);
+    player.position.set(0, 0, 10);
 })();
 
 export const movesQueue = [];

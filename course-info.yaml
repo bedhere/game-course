@@ -39,4 +39,10 @@ additional_files:
   - name: game/src/style.css
     visible: true
   - name: utils.js
+  - name: game/src/components/Map.js
+    visible: true
+  - name: game/public/models/Small House.glb
+    visible: true
+  - name: game/src/components/House.js
+    visible: true
 yaml_version: 5

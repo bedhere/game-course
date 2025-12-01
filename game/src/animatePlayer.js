@@ -26,12 +26,12 @@ function setPosition(progress) {
     let endX = startX;
     let endY = startY;
 
-    if (movesQueue[0] === "left") endX -= 10;
-    if (movesQueue[0] === "right") endX += 10;
-    if (movesQueue[0] === "forward") endY += 10;
-    if (movesQueue[0] === "backward") endY -= 10;
+    if (movesQueue[0] === "left") endX -= 1;
+    if (movesQueue[0] === "right") endX += 1;
+    if (movesQueue[0] === "forward") endY += 1;
+    if (movesQueue[0] === "backward") endY -= 1;
 
     player.position.x = THREE.MathUtils.lerp(startX, endX, progress);
     player.position.y = THREE.MathUtils.lerp(startY, endY, progress);
-    player.children[0].position.z = Math.sin(progress * Math.PI) * 8;
+    player.children[0].position.z = Math.sin(progress * Math.PI) * 2;
 }
