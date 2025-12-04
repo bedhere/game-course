@@ -1,12 +1,38 @@
 import * as THREE from 'three';
 import {movesQueue, player, stepCompleted} from './components/Player.js';
+import { house } from './components/Map.js';
+import { monsters } from './components/Monsters.js';
+import { canOccupyPlayer } from './colliders.js';
 
 const moveClock = new THREE.Clock(false);
 
 export function animatePlayer() {
     if (!movesQueue.length) return;
 
-    if (!moveClock.running) moveClock.start();
+    // Before starting a new animated step, do a tentative collision check
+    if (!moveClock.running) {
+        const dir = movesQueue[0];
+
+        const startX = player.position.x;
+        const startY = player.position.y;
+        let endX = startX;
+        let endY = startY;
+        // Use the same step magnitude as Player.stepCompleted tentative check (±10)
+        if (dir === 'left') endX -= 10;
+        if (dir === 'right') endX += 10;
+        if (dir === 'forward') endY += 10;
+        if (dir === 'backward') endY -= 10;
+        
+        // Use shared occupancy logic
+        const ok = canOccupyPlayer(player, endX, endY, { house, monsters });
+        if (!ok) {
+            // Cancel this move before animation begins
+            movesQueue.shift();
+            return;
+        }
+
+        moveClock.start();
+    }
 
     const stepTime = 0.2; // Seconds it takes to take a step
     const progress = Math.min(1, moveClock.getElapsedTime() / stepTime);

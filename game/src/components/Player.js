@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { house } from './Map.js';
+import { monsters } from './Monsters.js';
+import { canOccupyPlayer } from '../colliders.js';
 
 // Create a player group with a child mesh (body) so animatePlayer can access children[0]
 export const player = new THREE.Group();
@@ -31,8 +34,18 @@ export function stepCompleted() {
 
     // Keep stepCompleted consistent with animatePlayer.setPosition axes:
     // left/right -> x, forward/backward -> y
-    if (direction === 'left') player.position.x -= 10;
-    if (direction === 'right') player.position.x += 10;
-    if (direction === 'forward') player.position.y += 10;
-    if (direction === 'backward') player.position.y -= 10;
+    let nextX = player.position.x;
+    let nextY = player.position.y;
+    if (direction === 'left') nextX -= 10;
+    if (direction === 'right') nextX += 10;
+    if (direction === 'forward') nextY += 10;
+    if (direction === 'backward') nextY -= 10;
+
+    // Use shared occupancy logic; only commit if allowed
+    const ok = canOccupyPlayer(player, nextX, nextY, { house, monsters });
+    if (!ok) {
+        return;
+    }
+    player.position.x = nextX;
+    player.position.y = nextY;
 }

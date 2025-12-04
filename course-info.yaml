@@ -45,4 +45,7 @@ additional_files:
     visible: true
   - name: game/src/components/House.js
     visible: true
+  - name: game/src/components/Monsters.js
+  - name: game/src/colliders.js
+  - name: game/package-lock.json
 yaml_version: 5

@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { loadHouse } from './House.js';
 
 export const map = new THREE.Group();
+export let house = null;
+let bounds = null;
 
 export async function initMap() {
     const squareSize = 30;
@@ -34,10 +36,23 @@ export async function initMap() {
         }
     }
 
+    // cache bounds once based on board
+    const half = (boardSize * squareSize) / 2;
+    bounds = { minX: -half, maxX: half, minY: -half, maxY: half, squareSize, boardSize };
+
     try {
-        const house = await loadHouse();
+        house = await loadHouse();
         map.add(house);
     } catch (e) {
         console.error('Failed to load house model', e);
     }
+}
+
+export function getMapBounds() {
+    if (bounds) return bounds;
+    // Fallback if called too early
+    const squareSize = 30;
+    const boardSize = 20;
+    const half = (boardSize * squareSize) / 2;
+    return { minX: -half, maxX: half, minY: -half, maxY: half, squareSize, boardSize };
 }
