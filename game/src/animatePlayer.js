@@ -30,6 +30,23 @@ export function animatePlayer() {
             movesQueue.shift();
             return;
         }
+        const frog = player.userData.frog;
+        if (frog) {
+            if (!frog.userData.baseQuat) {
+                frog.userData.baseQuat = frog.quaternion.clone();
+            }
+
+            let angle = 0;
+            if (dir === 'left') angle = -Math.PI / 2;
+            if (dir === 'right') angle =  Math.PI / 2;
+            if (dir === 'forward') angle = Math.PI;
+            if (dir === 'backward') angle = 0;
+
+            const q = new THREE.Quaternion();
+            q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angle);
+
+            frog.quaternion.copy(frog.userData.baseQuat).multiply(q);
+        }
 
         moveClock.start();
     }
@@ -59,5 +76,6 @@ function setPosition(progress) {
 
     player.position.x = THREE.MathUtils.lerp(startX, endX, progress);
     player.position.y = THREE.MathUtils.lerp(startY, endY, progress);
-    player.children[0].position.z = Math.sin(progress * Math.PI) * 2;
+   const frog = player.userData.frog;
+   if (frog) frog.position.z = Math.sin(progress * Math.PI) * 2;
 }

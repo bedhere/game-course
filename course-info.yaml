@@ -46,6 +46,11 @@ additional_files:
   - name: game/src/components/House.js
     visible: true
   - name: game/src/components/Monsters.js
+    visible: true
   - name: game/src/colliders.js
+    visible: true
   - name: game/package-lock.json
+    visible: true
+  - name: game/public/models/Frog.glb
+    visible: true
 yaml_version: 5

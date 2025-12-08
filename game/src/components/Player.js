@@ -2,22 +2,39 @@ import * as THREE from 'three';
 import { house } from './Map.js';
 import { monsters } from './Monsters.js';
 import { canOccupyPlayer } from '../colliders.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// Create a player group with a child mesh (body) so animatePlayer can access children[0]
 export const player = new THREE.Group();
 
 (function initPlayer() {
-    const body = new THREE.Mesh(
-        new THREE.BoxGeometry(15, 15, 20),
-        new THREE.MeshLambertMaterial({
-            color: 'white',
-            flatShading: true,
-        })
-    );
-    body.position.z = 0;
-    player.add(body);
+    const loader = new GLTFLoader();
+    loader.load(
+        '/models/Frog.glb',
+        (gltf) => {
+            console.log('MODEL LOADED', gltf.scene);
 
-    // Initial position
+            const frog = gltf.scene;
+
+            frog.scale.set(30, 30, 30);
+            frog.rotation.x = Math.PI / 2;
+            frog.position.set(0, 0, 0);
+
+            frog.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+
+            player.add(frog);
+            player.userData.frog = frog;
+        },
+        undefined,
+        (err) => {
+            console.error('LOAD ERROR', err);
+        }
+    );
+
     player.position.set(0, 0, 10);
 })();
 
@@ -32,8 +49,6 @@ export function stepCompleted() {
     const direction = movesQueue.shift();
     if (!direction) return;
 
-    // Keep stepCompleted consistent with animatePlayer.setPosition axes:
-    // left/right -> x, forward/backward -> y
     let nextX = player.position.x;
     let nextY = player.position.y;
     if (direction === 'left') nextX -= 10;
@@ -41,11 +56,9 @@ export function stepCompleted() {
     if (direction === 'forward') nextY += 10;
     if (direction === 'backward') nextY -= 10;
 
-    // Use shared occupancy logic; only commit if allowed
     const ok = canOccupyPlayer(player, nextX, nextY, { house, monsters });
-    if (!ok) {
-        return;
-    }
+    if (!ok) return;
+
     player.position.x = nextX;
     player.position.y = nextY;
 }
