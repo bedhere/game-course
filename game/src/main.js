@@ -2,21 +2,23 @@ import * as THREE from 'three';
 import {Camera} from "./components/Camera.js";
 import {Renderer} from "./components/Renderer.js";
 import {player} from "./components/Player.js";
-import {map, initMap, getMapBounds, house} from "./components/Map.js";
+import {map, initMap, getMapBounds, houses} from "./components/Map.js";
 import {initMonsters, updateMonsters, monsters, createMonsterAt} from './components/Monsters.js';
 import './style.css';
 import './collectUserInput.js';
 import {animatePlayer} from './animatePlayer.js'
-import { getBox } from './colliders.js';
+import { getBox, canOccupy } from './colliders.js';
 
 const scene = new THREE.Scene();
 scene.add(player);
 scene.add(map)
 
 const ambientLight = new THREE.AmbientLight();
+ambientLight.intensity = 1.5;
 scene.add(ambientLight);
 
 const dirLight = new THREE.DirectionalLight();
+dirLight.intensity = 1.5;
 dirLight.position.set(-100, -100, 200);
 scene.add(dirLight);
 
@@ -40,25 +42,16 @@ renderer.setAnimationLoop(animate);
 
 const clock = new THREE.Clock();
 
-// --- Simple score UI (top-left) ---
+// Score UI (top-left)
 const killsEl = document.createElement('div');
-killsEl.style.position = 'fixed';
-killsEl.style.top = '8px';
-killsEl.style.left = '8px';
-killsEl.style.padding = '4px 8px';
-killsEl.style.background = 'rgba(0,0,0,0.4)';
-killsEl.style.color = '#fff';
-killsEl.style.fontFamily = 'monospace';
-killsEl.style.fontSize = '14px';
-killsEl.style.borderRadius = '4px';
+killsEl.className = 'score';
 document.body.appendChild(killsEl);
 let kills = 0;
 function updateKillsUI() { killsEl.textContent = `Score: ${kills}`; }
 updateKillsUI();
 
-// --- Radial attack on click ---
-// Increase attack radius noticeably (~1.75x previous 32)
-const ATTACK_RADIUS = 56;
+// Radial attack on click
+const ATTACK_RADIUS = 50;
 function handleClickAttack() {
     const px = player.position.x;
     const py = player.position.y;
@@ -101,18 +94,15 @@ function handleClickAttack() {
 const canvas = document.querySelector('canvas.game');
 if (canvas) {
     canvas.addEventListener('click', handleClickAttack);
-} else {
-    window.addEventListener('click', handleClickAttack);
 }
 
-// --- Attack radius visual effect management ---
+// Attack radius visual effect management
 const attackEffects = [];
 function spawnAttackEffect() {
     // Flat disk aligned with ground plane (XY), slightly above to avoid z-fighting
     const geom = new THREE.CircleGeometry(ATTACK_RADIUS, 48);
     const mat = new THREE.MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geom, mat);
-    // No rotation needed: ground is XY plane at z=0
     mesh.position.set(player.position.x, player.position.y, 0.2);
     scene.add(mesh);
     attackEffects.push({ mesh, mat, ttl: 0.5 }); // seconds
@@ -133,7 +123,7 @@ function updateAttackEffects(dt) {
     }
 }
 
-// --- Periodic spawning ---
+// Periodic spawning
 let spawnTimer = null;
 function startSpawning() {
     stopSpawning();
@@ -149,19 +139,19 @@ function stopSpawning() {
 }
 startSpawning();
 
-// --- Game Over handling ---
+// Game Over handling
 let isGameOver = false;
 let gameOverEl = null;
 function checkGameOver() {
     if (isGameOver) return false;
     if (!monsters.length) return false;
-    const playerBox = getBox(player);
-    for (const m of monsters) {
-        const mBox = getBox(m);
-        if (playerBox.intersectsBox(mBox)) {
-            triggerGameOver();
-            return true;
-        }
+    const ok = canOccupy(player, player.position.x, player.position.y, {
+        dynamicColliders: monsters,
+        ignore: [player],
+    });
+    if (!ok) {
+        triggerGameOver();
+        return true;
     }
     return false;
 }
@@ -173,16 +163,7 @@ function triggerGameOver() {
 
     gameOverEl = document.createElement('div');
     gameOverEl.textContent = 'Game Over';
-    gameOverEl.style.position = 'fixed';
-    gameOverEl.style.left = '50%';
-    gameOverEl.style.top = '20%';
-    gameOverEl.style.transform = 'translate(-50%, -50%)';
-    gameOverEl.style.padding = '12px 16px';
-    gameOverEl.style.background = 'rgba(0,0,0,0.7)';
-    gameOverEl.style.color = '#fff';
-    gameOverEl.style.fontFamily = 'monospace';
-    gameOverEl.style.fontSize = '24px';
-    gameOverEl.style.borderRadius = '6px';
+    gameOverEl.className = 'game-over';
     document.body.appendChild(gameOverEl);
 
     setTimeout(resetGame, 1500);
@@ -227,7 +208,7 @@ function animate() {
     const dt = clock.getDelta();
     animatePlayer();
     // Allow monsters to overlap the player only until game over is triggered
-    updateMonsters(dt, house, player, { allowPlayerOverlap: !isGameOver });
+    updateMonsters(dt, houses, player, { allowPlayerOverlap: !isGameOver });
     updateAttackEffects(dt);
     checkGameOver();
     renderer.render(scene, camera);

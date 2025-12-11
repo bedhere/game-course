@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { house } from './Map.js';
+import { houses } from './Map.js';
 import { monsters } from './Monsters.js';
-import { canOccupyPlayer } from '../colliders.js';
+import { canOccupy } from '../colliders.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export const player = new THREE.Group();
@@ -56,7 +56,7 @@ export function stepCompleted() {
     if (direction === 'forward') nextY += 10;
     if (direction === 'backward') nextY -= 10;
 
-    const ok = canOccupyPlayer(player, nextX, nextY, { house, monsters });
+    const ok = canOccupy(player, nextX, nextY, { staticColliders: houses || [], dynamicColliders: monsters });
     if (!ok) return;
 
     player.position.x = nextX;

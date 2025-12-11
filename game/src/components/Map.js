@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { loadHouse } from './House.js';
+import { loadHouses } from './Houses.js';
 
 export const map = new THREE.Group();
-export let house = null;
+export let houses = [];
 let bounds = null;
 
 export async function initMap() {
@@ -41,10 +41,12 @@ export async function initMap() {
     bounds = { minX: -half, maxX: half, minY: -half, maxY: half, squareSize, boardSize };
 
     try {
-        house = await loadHouse();
-        map.add(house);
+        houses = await loadHouses();
+        for (const h of houses) {
+            map.add(h);
+        }
     } catch (e) {
-        console.error('Failed to load house model', e);
+        console.error('Failed to load house models', e);
     }
 }
 

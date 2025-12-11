@@ -1,13 +1,11 @@
 import * as THREE from 'three';
-import { getBox, getTentativeBox, intersectsAny, getHouseBox } from '../colliders.js';
+import { canOccupy, isInsideBounds } from '../colliders.js';
+import { getMapBounds } from './Map.js';
 
 export const monsters = [];
 
-// Player is ~5 units/sec (1 unit per 0.2s).
-// Per request: make monsters roughly twice as fast as before but still slower than player.
-// Updated per latest request: make monsters move twice as fast as they do now.
-// Previously 4.8 u/s -> now 9.6 u/s.
 const speed = 9.6; // units per second
+const bounds = getMapBounds();
 
 export function initMonsters(bounds) {
   // Create 4 red cubes at map corners
@@ -36,15 +34,10 @@ export function createMonsterAt(x, y) {
   return cube;
 }
 
-export function updateMonsters(dt, house, player, { allowPlayerOverlap = true } = {}) {
+export function updateMonsters(dt, houses, player, { allowPlayerOverlap = true } = {}) {
   if (!monsters.length) return;
 
-  // Prepare current boxes
-  const playerBox = getBox(player);
-  const houseBox = getHouseBox(house);
-
-  // We'll update sequentially; use boxes of already-updated monsters to prevent overlaps
-  const updatedBoxes = [];
+  const staticColliders = Array.isArray(houses) ? houses : (houses ? [houses] : []);
 
   for (const m of monsters) {
     const dir = new THREE.Vector3(
@@ -62,37 +55,21 @@ export function updateMonsters(dt, house, player, { allowPlayerOverlap = true } 
       m.position.z
     );
 
-    // Tentative box at next position using shared helper
-    const tentativeBox = getTentativeBox(m, nextPos.x, nextPos.y);
-
-    let collide = false;
-    // If moving into the player, allow the overlap only when enabled (pre-game-over)
-    if (tentativeBox.intersectsBox(playerBox)) {
-      if (allowPlayerOverlap) {
-        // Allow entering player's space so main game-over check can detect it
-        m.position.x = nextPos.x;
-        m.position.y = nextPos.y;
-        updatedBoxes.push(tentativeBox);
-        continue;
-      } else {
-        collide = true;
+      // Stay within map bounds
+      if (!isInsideBounds(nextPos.x, nextPos.y, bounds)) {
+          continue;
       }
-    }
-    if (houseBox && tentativeBox.intersectsBox(houseBox)) collide = true;
-    if (!collide) {
-      for (const b of updatedBoxes) {
-        if (tentativeBox.intersectsBox(b)) { collide = true; break; }
-      }
-    }
 
-    if (collide) {
-      // Stay in place; add current box
-      updatedBoxes.push(getBox(m));
-    } else {
-      // Commit move and record the new box
+    // Build dynamic colliders: all monsters and optionally the player
+    const dynamicColliders = allowPlayerOverlap ? monsters : [player, ...monsters];
+    const ok = canOccupy(m, nextPos.x, nextPos.y, {
+      staticColliders,
+      dynamicColliders,
+      ignore: [m],
+    });
+    if (ok) {
       m.position.x = nextPos.x;
       m.position.y = nextPos.y;
-      updatedBoxes.push(tentativeBox);
     }
   }
 }

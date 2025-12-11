@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import {movesQueue, player, stepCompleted} from './components/Player.js';
-import { house } from './components/Map.js';
+import { houses, getMapBounds } from './components/Map.js';
 import { monsters } from './components/Monsters.js';
-import { canOccupyPlayer } from './colliders.js';
+import { canOccupy, isInsideBounds } from './colliders.js';
 
 const moveClock = new THREE.Clock(false);
+const bounds = getMapBounds();
 
 export function animatePlayer() {
     if (!movesQueue.length) return;
@@ -22,9 +23,14 @@ export function animatePlayer() {
         if (dir === 'right') endX += 10;
         if (dir === 'forward') endY += 10;
         if (dir === 'backward') endY -= 10;
-        
+
+        // Block if outside map bounds
+        if (!isInsideBounds(endX, endY, bounds)) {
+            movesQueue.shift();
+            return;
+        }
         // Use shared occupancy logic
-        const ok = canOccupyPlayer(player, endX, endY, { house, monsters });
+        const ok = canOccupy(player, endX, endY, { staticColliders: houses || [], dynamicColliders: monsters });
         if (!ok) {
             // Cancel this move before animation begins
             movesQueue.shift();
