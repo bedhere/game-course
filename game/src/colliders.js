@@ -2,7 +2,8 @@ import * as THREE from 'three';
 
 export function getBox(obj, out) {
   const box = out || new THREE.Box3();
-  return box.setFromObject(obj);
+  const src = obj && obj.userData && obj.userData.collider ? obj.userData.collider : obj;
+  return box.setFromObject(src);
 }
 
 export function intersectsAny(box, boxes) {

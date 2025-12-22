@@ -6,6 +6,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export const player = new THREE.Group();
 
+import { BASE_PLAYER_MOVEMENT_SPEED } from '../gameConfig.js';
+
+// Step size in map units for each queued move (difficulty can tweak this)
+export let PlayerMovementSpeed = BASE_PLAYER_MOVEMENT_SPEED;
+export function setPlayerMovementSpeed(v) { PlayerMovementSpeed = v; }
+
 (function initPlayer() {
     const loader = new GLTFLoader();
     loader.load(
@@ -51,10 +57,10 @@ export function stepCompleted() {
 
     let nextX = player.position.x;
     let nextY = player.position.y;
-    if (direction === 'left') nextX -= 10;
-    if (direction === 'right') nextX += 10;
-    if (direction === 'forward') nextY += 10;
-    if (direction === 'backward') nextY -= 10;
+    if (direction === 'left') nextX -= PlayerMovementSpeed;
+    if (direction === 'right') nextX += PlayerMovementSpeed;
+    if (direction === 'forward') nextY += PlayerMovementSpeed;
+    if (direction === 'backward') nextY -= PlayerMovementSpeed;
 
     const ok = canOccupy(player, nextX, nextY, { staticColliders: houses || [], dynamicColliders: monsters });
     if (!ok) return;

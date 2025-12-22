@@ -1,17 +1,40 @@
 import * as THREE from 'three';
-import {Camera} from "./components/Camera.js";
-import {Renderer} from "./components/Renderer.js";
-import {player} from "./components/Player.js";
-import {map, initMap, getMapBounds, houses} from "./components/Map.js";
-import {initMonsters, updateMonsters, monsters, createMonsterAt} from './components/Monsters.js';
+import { Camera } from './components/Camera.js';
+import { Renderer } from './components/Renderer.js';
+import { player, setPlayerMovementSpeed } from './components/Player.js';
+import { map, initMap, getMapBounds, houses } from './components/Map.js';
+import {
+    initMonsters,
+    updateMonsters,
+    monsters,
+    createMonsterAt,
+    setEnemyMovementSpeed,
+    EnemySpawnDelay,
+} from './components/Monsters.js';
 import './style.css';
 import './collectUserInput.js';
-import {animatePlayer} from './animatePlayer.js'
+import { animatePlayer } from './animatePlayer.js';
 import { getBox, canOccupy } from './colliders.js';
+
+import {
+    SCORE_PER_SECOND,
+    SCORE_PER_KILL,
+    DIFFICULTY_SCORE_PEAK,
+    BASE_PLAYER_MOVEMENT_SPEED,
+    MAX_PLAYER_MOVEMENT_SPEED,
+    BASE_ENEMY_MOVEMENT_SPEED,
+    MAX_ENEMY_MOVEMENT_SPEED,
+    BASE_ENEMY_SPAWN_DELAY,
+    MIN_ENEMY_SPAWN_DELAY,
+    BASE_ATTACK_DISTANCE,
+    MAX_ATTACK_DISTANCE,
+    BASE_ATTACK_DELAY,
+    MIN_ATTACK_DELAY,
+} from './gameConfig.js';
 
 const scene = new THREE.Scene();
 scene.add(player);
-scene.add(map)
+scene.add(map);
 
 const ambientLight = new THREE.AmbientLight();
 ambientLight.intensity = 1.5;
@@ -42,36 +65,43 @@ renderer.setAnimationLoop(animate);
 
 const clock = new THREE.Clock();
 
-// Score UI (top-left)
-const killsEl = document.createElement('div');
-killsEl.className = 'score';
-document.body.appendChild(killsEl);
-let kills = 0;
-function updateKillsUI() { killsEl.textContent = `Score: ${kills}`; }
-updateKillsUI();
+// SCORE
+const scoreEl = document.createElement('div');
+scoreEl.className = 'score';
+document.body.appendChild(scoreEl);
+let score = 0;
+function updateScoreUI() {
+    scoreEl.textContent = `Score: ${Math.floor(score)}`;
+}
+updateScoreUI();
 
-// Radial attack on click
-const ATTACK_RADIUS = 50;
+// ATTACK
+let PlayerAttackDistance = BASE_ATTACK_DISTANCE;
+let PlayerAttackDelay = BASE_ATTACK_DELAY;
+let lastAttackTime = -Infinity;
+
 function handleClickAttack() {
+    const now = clock.getElapsedTime();
+    if (now - lastAttackTime < PlayerAttackDelay) return;
+    lastAttackTime = now;
+
     const px = player.position.x;
     const py = player.position.y;
-    const r = ATTACK_RADIUS;
+    const r = PlayerAttackDistance;
 
-    // Determine which monsters are within radius
     const survivors = [];
     let killedThisClick = 0;
+
     for (const m of monsters) {
         const dx = m.position.x - px;
         const dy = m.position.y - py;
-        // Compute a conservative 2D radius from monster's bounding box in XY
+
         const mBox = getBox(m);
-        const mRadius = 0.5 * Math.max(
-            mBox.max.x - mBox.min.x,
-            mBox.max.y - mBox.min.y
-        );
+        const mRadius =
+            0.5 * Math.max(mBox.max.x - mBox.min.x, mBox.max.y - mBox.min.y);
+
         const touchR = r + mRadius;
-        if (dx*dx + dy*dy <= touchR * touchR) {
-            // remove from scene
+        if (dx * dx + dy * dy <= touchR * touchR) {
             scene.remove(m);
             killedThisClick++;
         } else {
@@ -80,32 +110,36 @@ function handleClickAttack() {
     }
 
     if (killedThisClick > 0) {
-        // Mutate the exported array in place to keep reference stable
         monsters.splice(0, monsters.length, ...survivors);
-        kills += killedThisClick;
-        updateKillsUI();
+        score += SCORE_PER_KILL * killedThisClick;
+        updateScoreUI();
     }
 
-    // Visualize attack radius briefly
     spawnAttackEffect();
 }
 
-// Attach to canvas or window
 const canvas = document.querySelector('canvas.game');
 if (canvas) {
     canvas.addEventListener('click', handleClickAttack);
 }
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') handleClickAttack();
+});
 
-// Attack radius visual effect management
+// ATTACK EFFECTS
 const attackEffects = [];
 function spawnAttackEffect() {
-    // Flat disk aligned with ground plane (XY), slightly above to avoid z-fighting
-    const geom = new THREE.CircleGeometry(ATTACK_RADIUS, 48);
-    const mat = new THREE.MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
+    const geom = new THREE.CircleGeometry(PlayerAttackDistance, 48);
+    const mat = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        transparent: true,
+        opacity: 0.6,
+        side: THREE.DoubleSide,
+    });
     const mesh = new THREE.Mesh(geom, mat);
     mesh.position.set(player.position.x, player.position.y, 0.2);
     scene.add(mesh);
-    attackEffects.push({ mesh, mat, ttl: 0.5 }); // seconds
+    attackEffects.push({ mesh, mat, ttl: 0.5 });
 }
 
 function updateAttackEffects(dt) {
@@ -123,25 +157,13 @@ function updateAttackEffects(dt) {
     }
 }
 
-// Periodic spawning
-let spawnTimer = null;
-function startSpawning() {
-    stopSpawning();
-    spawnTimer = setInterval(() => {
-        const [x, y] = spawnCorners[(Math.random() * spawnCorners.length) | 0];
-        const m = createMonsterAt(x, y);
-        monsters.push(m);
-        scene.add(m);
-    }, 7000);
-}
-function stopSpawning() {
-    if (spawnTimer) { clearInterval(spawnTimer); spawnTimer = null; }
-}
-startSpawning();
+// SPAWN LOGIC
+let enemySpawnTimer = 0;
 
 // Game Over handling
 let isGameOver = false;
 let gameOverEl = null;
+
 function checkGameOver() {
     if (isGameOver) return false;
     if (!monsters.length) return false;
@@ -159,7 +181,6 @@ function checkGameOver() {
 function triggerGameOver() {
     if (isGameOver) return;
     isGameOver = true;
-    stopSpawning();
 
     gameOverEl = document.createElement('div');
     gameOverEl.textContent = 'Game Over';
@@ -170,21 +191,19 @@ function triggerGameOver() {
 }
 
 function resetGame() {
-    // Remove overlay
-    if (gameOverEl) { gameOverEl.remove(); gameOverEl = null; }
+    if (gameOverEl) {
+        gameOverEl.remove();
+        gameOverEl = null;
+    }
 
-    // Clear monsters from scene and array
     for (const m of monsters) scene.remove(m);
     monsters.splice(0, monsters.length);
 
-    // Reset player position
     player.position.set(0, 0, 10);
 
-    // Reset score
-    kills = 0;
-    updateKillsUI();
+    score = 0;
+    updateScoreUI();
 
-    // Clear visuals
     for (const e of attackEffects) {
         scene.remove(e.mesh);
         e.mesh.geometry.dispose();
@@ -192,26 +211,64 @@ function resetGame() {
     }
     attackEffects.length = 0;
 
-    // Respawn initial corner monsters
     for (const [x, y] of spawnCorners) {
         const m = createMonsterAt(x, y);
         monsters.push(m);
         scene.add(m);
     }
 
-    // Resume spawning
-    startSpawning();
+    enemySpawnTimer = 0;
     isGameOver = false;
 }
 
 function animate() {
     const dt = clock.getDelta();
+
     animatePlayer();
-    // Allow monsters to overlap the player only until game over is triggered
     updateMonsters(dt, houses, player, { allowPlayerOverlap: !isGameOver });
     updateAttackEffects(dt);
+
+    // Score: +1 per second survived
+    score += SCORE_PER_SECOND * dt;
+    updateScoreUI();
+
+    // Difficulty scaling based on score (0..1)
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const t = clamp(score / DIFFICULTY_SCORE_PEAK, 0, 1);
+
+    const spawnDelay =
+        BASE_ENEMY_SPAWN_DELAY +
+        (MIN_ENEMY_SPAWN_DELAY - BASE_ENEMY_SPAWN_DELAY) * t;
+    const enemySpeed =
+        BASE_ENEMY_MOVEMENT_SPEED +
+        (MAX_ENEMY_MOVEMENT_SPEED - BASE_ENEMY_MOVEMENT_SPEED) * t;
+    const playerSpeed =
+        BASE_PLAYER_MOVEMENT_SPEED +
+        (MAX_PLAYER_MOVEMENT_SPEED - BASE_PLAYER_MOVEMENT_SPEED) * t;
+
+    PlayerAttackDelay =
+        BASE_ATTACK_DELAY + (MIN_ATTACK_DELAY - BASE_ATTACK_DELAY) * t;
+    PlayerAttackDistance =
+        BASE_ATTACK_DISTANCE +
+        (MAX_ATTACK_DISTANCE - BASE_ATTACK_DISTANCE) * t;
+
+    setEnemyMovementSpeed(enemySpeed);
+    setPlayerMovementSpeed(playerSpeed);
+
+    // Spawn enemies over time using dt
+    if (!isGameOver) {
+        enemySpawnTimer += dt;
+        const delay = spawnDelay || EnemySpawnDelay || BASE_ENEMY_SPAWN_DELAY;
+        if (enemySpawnTimer >= delay) {
+            enemySpawnTimer = 0;
+            const [x, y] =
+                spawnCorners[(Math.random() * spawnCorners.length) | 0];
+            const m = createMonsterAt(x, y);
+            monsters.push(m);
+            scene.add(m);
+        }
+    }
+
     checkGameOver();
     renderer.render(scene, camera);
 }
-
-

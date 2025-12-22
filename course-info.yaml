@@ -41,6 +41,10 @@ additional_files:
   - name: utils.js
   - name: game/src/components/Map.js
     visible: true
+  - name: game/public/models/Frog.glb
+    visible: true
+  - name: game/public/models/Monster.glb
+    visible: true
   - name: game/public/models/Small_House.glb
     visible: true
   - name: game/public/models/Green_House.glb
@@ -53,7 +57,6 @@ additional_files:
     visible: true
   - name: game/src/colliders.js
     visible: true
-  - name: game/public/models/Frog.glb
+  - name: game/src/gameConfig.js
     visible: true
-  - name: game/package-lock.json
 yaml_version: 5

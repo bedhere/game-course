@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {movesQueue, player, stepCompleted} from './components/Player.js';
+import {movesQueue, player, stepCompleted, PlayerMovementSpeed} from './components/Player.js';
 import { houses, getMapBounds } from './components/Map.js';
 import { monsters } from './components/Monsters.js';
 import { canOccupy, isInsideBounds } from './colliders.js';
@@ -18,11 +18,11 @@ export function animatePlayer() {
         const startY = player.position.y;
         let endX = startX;
         let endY = startY;
-        // Use the same step magnitude as Player.stepCompleted tentative check (±10)
-        if (dir === 'left') endX -= 10;
-        if (dir === 'right') endX += 10;
-        if (dir === 'forward') endY += 10;
-        if (dir === 'backward') endY -= 10;
+        // Use the same step magnitude as Player.stepCompleted (±PlayerMovementSpeed)
+        if (dir === 'left') endX -= PlayerMovementSpeed;
+        if (dir === 'right') endX += PlayerMovementSpeed;
+        if (dir === 'forward') endY += PlayerMovementSpeed;
+        if (dir === 'backward') endY -= PlayerMovementSpeed;
 
         // Block if outside map bounds
         if (!isInsideBounds(endX, endY, bounds)) {
