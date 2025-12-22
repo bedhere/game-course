@@ -1,3 +1,8 @@
+/**
+ * Asset attribution
+ * - Monster.glb — Armabee Evolved by Quaternius [Public Domain] via Poly Pizza
+ *   https://poly.pizza/m/GcttdvsqsQ
+ */
 import * as THREE from 'three';
 import { canOccupy, isInsideBounds } from '../colliders.js';
 import { getMapBounds } from './Map.js';
