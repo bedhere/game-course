@@ -6,6 +6,10 @@ summary: |-
   <p>You can use <b>HTML tags</b> inside the description.</p>
 programming_language: JavaScript
 content:
+  - Introduction
+  - Skeleton
+  - Core_loop
+  - Visual
   - TestLesson
 additional_files:
   - name: package.json

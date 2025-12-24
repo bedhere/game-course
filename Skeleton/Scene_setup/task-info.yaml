@@ -1,0 +1,5 @@
+type: theory
+custom_name: Scene setup
+files:
+  - name: notes.md
+    visible: true
