@@ -1,20 +1,46 @@
 import * as THREE from 'three';
+import { houses } from './Map.js';
+import { monsters } from './Monsters.js';
+import { canOccupy } from '../colliders.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// Create a player group with a child mesh (body) so animatePlayer can access children[0]
 export const player = new THREE.Group();
 
-(function initPlayer() {
-    const body = new THREE.Mesh(
-        new THREE.BoxGeometry(15, 15, 20),
-        new THREE.MeshLambertMaterial({
-            color: 'white',
-            flatShading: true,
-        })
-    );
-    body.position.z = 0;
-    player.add(body);
+import { BASE_PLAYER_MOVEMENT_SPEED } from '../gameConfig.js';
 
-    // Initial position
+// Step size in map units for each queued move (difficulty can tweak this)
+export let PlayerMovementSpeed = BASE_PLAYER_MOVEMENT_SPEED;
+export function setPlayerMovementSpeed(v) { PlayerMovementSpeed = v; }
+
+(function initPlayer() {
+    const loader = new GLTFLoader();
+    loader.load(
+        '/models/Frog.glb',
+        (gltf) => {
+            console.log('MODEL LOADED', gltf.scene);
+
+            const frog = gltf.scene;
+
+            frog.scale.set(30, 30, 30);
+            frog.rotation.x = Math.PI / 2;
+            frog.position.set(0, 0, 0);
+
+            frog.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+
+            player.add(frog);
+            player.userData.frog = frog;
+        },
+        undefined,
+        (err) => {
+            console.error('LOAD ERROR', err);
+        }
+    );
+
     player.position.set(0, 0, 10);
 })();
 
@@ -29,10 +55,16 @@ export function stepCompleted() {
     const direction = movesQueue.shift();
     if (!direction) return;
 
-    // Keep stepCompleted consistent with animatePlayer.setPosition axes:
-    // left/right -> x, forward/backward -> y
-    if (direction === 'left') player.position.x -= 10;
-    if (direction === 'right') player.position.x += 10;
-    if (direction === 'forward') player.position.y += 10;
-    if (direction === 'backward') player.position.y -= 10;
+    let nextX = player.position.x;
+    let nextY = player.position.y;
+    if (direction === 'left') nextX -= PlayerMovementSpeed;
+    if (direction === 'right') nextX += PlayerMovementSpeed;
+    if (direction === 'forward') nextY += PlayerMovementSpeed;
+    if (direction === 'backward') nextY -= PlayerMovementSpeed;
+
+    const ok = canOccupy(player, nextX, nextY, { staticColliders: houses || [], dynamicColliders: monsters });
+    if (!ok) return;
+
+    player.position.x = nextX;
+    player.position.y = nextY;
 }

@@ -1,12 +1,61 @@
 import * as THREE from 'three';
-import {movesQueue, player, stepCompleted} from './components/Player.js';
+import {movesQueue, player, stepCompleted, PlayerMovementSpeed} from './components/Player.js';
+import { houses, getMapBounds } from './components/Map.js';
+import { monsters } from './components/Monsters.js';
+import { canOccupy, isInsideBounds } from './colliders.js';
 
 const moveClock = new THREE.Clock(false);
+const bounds = getMapBounds();
 
 export function animatePlayer() {
     if (!movesQueue.length) return;
 
-    if (!moveClock.running) moveClock.start();
+    // Before starting a new animated step, do a tentative collision check
+    if (!moveClock.running) {
+        const dir = movesQueue[0];
+
+        const startX = player.position.x;
+        const startY = player.position.y;
+        let endX = startX;
+        let endY = startY;
+        // Use the same step magnitude as Player.stepCompleted (±PlayerMovementSpeed)
+        if (dir === 'left') endX -= PlayerMovementSpeed;
+        if (dir === 'right') endX += PlayerMovementSpeed;
+        if (dir === 'forward') endY += PlayerMovementSpeed;
+        if (dir === 'backward') endY -= PlayerMovementSpeed;
+
+        // Block if outside map bounds
+        if (!isInsideBounds(endX, endY, bounds)) {
+            movesQueue.shift();
+            return;
+        }
+        // Use shared occupancy logic
+        const ok = canOccupy(player, endX, endY, { staticColliders: houses || [], dynamicColliders: monsters });
+        if (!ok) {
+            // Cancel this move before animation begins
+            movesQueue.shift();
+            return;
+        }
+        const frog = player.userData.frog;
+        if (frog) {
+            if (!frog.userData.baseQuat) {
+                frog.userData.baseQuat = frog.quaternion.clone();
+            }
+
+            let angle = 0;
+            if (dir === 'left') angle = -Math.PI / 2;
+            if (dir === 'right') angle =  Math.PI / 2;
+            if (dir === 'forward') angle = Math.PI;
+            if (dir === 'backward') angle = 0;
+
+            const q = new THREE.Quaternion();
+            q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angle);
+
+            frog.quaternion.copy(frog.userData.baseQuat).multiply(q);
+        }
+
+        moveClock.start();
+    }
 
     const stepTime = 0.2; // Seconds it takes to take a step
     const progress = Math.min(1, moveClock.getElapsedTime() / stepTime);
@@ -33,5 +82,6 @@ function setPosition(progress) {
 
     player.position.x = THREE.MathUtils.lerp(startX, endX, progress);
     player.position.y = THREE.MathUtils.lerp(startY, endY, progress);
-    player.children[0].position.z = Math.sin(progress * Math.PI) * 2;
+   const frog = player.userData.frog;
+   if (frog) frog.position.z = Math.sin(progress * Math.PI) * 2;
 }
