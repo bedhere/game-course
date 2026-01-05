@@ -1,5 +1,8 @@
 type: theory
 custom_name: Scene setup
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/scene.png
+    visible: false
+    is_binary: true

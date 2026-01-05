@@ -20,47 +20,42 @@ additional_files:
   - name: jest.config.js
   - name: babel.config.cjs
   - name: __mocks__/three-esm.js
-  - name: game/vite.config.js
-    visible: true
   - name: game/package.json
     visible: true
   - name: game/index.html
-    visible: true
-  - name: game/public/vite.svg
-    visible: true
-  - name: game/src/components/Camera.js
-    visible: true
-  - name: game/src/components/Player.js
-    visible: true
-  - name: game/src/components/Renderer.js
-    visible: true
-  - name: game/src/animatePlayer.js
-    visible: true
-  - name: game/src/collectUserInput.js
     visible: true
   - name: game/src/main.js
     visible: true
   - name: game/src/style.css
     visible: true
   - name: utils.js
-  - name: game/src/components/Map.js
+  - name: game/public/models/tode.glb
     visible: true
-  - name: game/public/models/Frog.glb
+  - name: game/public/models/enemy.glb
     visible: true
-  - name: game/public/models/Monster.glb
+  - name: game/public/tode.svg
     visible: true
-  - name: game/public/models/Small_House.glb
+  - name: .junie/guidelines.md
     visible: true
-  - name: game/public/models/Green_House.glb
-    visible: true
-  - name: game/public/models/Brown_House.glb
-    visible: true
-  - name: game/src/components/Houses.js
-    visible: true
-  - name: game/src/components/Monsters.js
-    visible: true
-  - name: game/src/colliders.js
-    visible: true
-  - name: game/src/gameConfig.js
-    visible: true
+  - name: game_fin/src/main.js
+  - name: game_fin/src/style.css
+  - name: game_fin/src/components/Map.js
+  - name: game_fin/src/components/Camera.js
+  - name: game_fin/src/components/Houses.js
+  - name: game_fin/src/components/Player.js
+  - name: game_fin/src/components/Monsters.js
+  - name: game_fin/src/components/Renderer.js
+  - name: game_fin/src/colliders.js
+  - name: game_fin/src/gameConfig.js
+  - name: game_fin/src/animatePlayer.js
+  - name: game_fin/src/collectUserInput.js
+  - name: game_fin/public/models/Frog.glb
+  - name: game_fin/public/models/Monster.glb
+  - name: game_fin/public/models/Brown_House.glb
+  - name: game_fin/public/models/Green_House.glb
+  - name: game_fin/public/models/Small_House.glb
+  - name: game_fin/public/vite.svg
+  - name: game_fin/index.html
+  - name: game_fin/package.json
+  - name: game_fin/vite.config.js
 yaml_version: 5

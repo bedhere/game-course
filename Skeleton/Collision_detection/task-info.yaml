@@ -1,5 +1,8 @@
 type: theory
 custom_name: Collision detection
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/collision.gif
+    visible: false
+    is_binary: true

@@ -1,5 +1,3 @@
-> TODO: Experiment with prompts
-
 * `setAnimationLoop()` with callback where you need to
     * Update object positions/rotations
     * Check collisions (will be in next tasks)
@@ -10,5 +8,6 @@
 * Movement logic: let's add jump as a move (`Math.sin`)
 
 Try changing the code manually or ask Junie to better understand what customization options you have. You should get something like this:
+Adjust the movement speed, jump height, and jump distance to make it feel more natural.
 
-> GIF with player moving around
+![](images/movement.gif)

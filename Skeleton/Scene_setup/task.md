@@ -1,9 +1,7 @@
-> TODO: Experiment with prompts, figure out what works best and suggest to the user. Below are the main things which are worth the user's attention and can be explained in more detail in extra materials.
-
 * Scene (`THREE.Scene()`) — everything will be placed on a scene
-* Player model in the center — to verify that everything below works
 * AmbientLight — fills the scene
 * DirectionalLight — shows shadows, makes objects truly three-dimensional
+* Player model in the center — to verify that everything below works
 * Camera -- `OrthographicCamera` vs `PerspectiveCamera`
 * Renderer — takes the scene + camera and converts all 3D data into pixels that appear in the browser window
 
@@ -13,4 +11,4 @@
 
 You should get something like this:
 
-> Image of the result visible in the browser
+![](images/scene.png)

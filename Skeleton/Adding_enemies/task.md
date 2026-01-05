@@ -1,5 +1,3 @@
-> TODO: Experiment with prompts
-
 * Enemy objects: using provided model with animation
 * Automatic spawn in the scene corners
 * Moving towards the player
@@ -10,4 +8,10 @@ At this stage, enemies can overlap each other and do not inflict any damage on o
 
 Try changing the code manually or ask Junie to better understand what customization options you have. You should get something like this:
 
-> GIF with enemies moving to the player
+Adjust enemies speed, spawning delay and rotation if needed.
+
+Use the provided model or find another one.
+> enemy.glb — Armabee Evolved by Quaternius [Public Domain] via [Poly Pizza](https://poly.pizza/m/GcttdvsqsQ).
+  
+
+![](images/enemies.gif)

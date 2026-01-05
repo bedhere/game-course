@@ -1,5 +1,8 @@
 type: theory
 custom_name: Adding enemies
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/enemies.gif
+    visible: false
+    is_binary: true
