@@ -35,6 +35,8 @@ additional_files:
     visible: true
   - name: game/public/tode.svg
     visible: true
+  - name: game/public/models/small_house.glb
+    visible: true
   - name: .junie/guidelines.md
     visible: true
   - name: game_fin/src/main.js
