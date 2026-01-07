@@ -1,8 +1,0 @@
-type: edu
-custom_name: Test task
-files:
-  - name: test/test.jsx
-    visible: false
-    propagatable: false
-  - name: extra.md
-    visible: true

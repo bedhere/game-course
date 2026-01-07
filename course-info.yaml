@@ -10,7 +10,6 @@ content:
   - Skeleton
   - Core_loop
   - Visual
-  - TestLesson
 additional_files:
   - name: package.json
   - name: jsconfig.json
