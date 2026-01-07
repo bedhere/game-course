@@ -1,4 +1,7 @@
 type: theory
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/score.gif
+    visible: false
+    is_binary: true

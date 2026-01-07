@@ -11,7 +11,7 @@ Try changing the code manually or ask Junie to better understand what customizat
 Adjust enemies speed, spawning delay and rotation if needed.
 
 Use the provided model or find another one.
-> enemy.glb — Armabee Evolved by Quaternius [Public Domain] via [Poly Pizza](https://poly.pizza/m/GcttdvsqsQ).
+> `enemy.glb` — Armabee Evolved by Quaternius [Public Domain](https://creativecommons.org/publicdomain/zero/1.0/) via [Poly Pizza](https://poly.pizza/m/GcttdvsqsQ).
   
 
 ![](images/enemies.gif)

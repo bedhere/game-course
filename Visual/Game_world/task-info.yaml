@@ -1,5 +1,8 @@
 type: theory
 custom_name: Game world
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/game_world.gif
+    visible: false
+    is_binary: true

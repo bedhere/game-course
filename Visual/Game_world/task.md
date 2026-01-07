@@ -3,4 +3,6 @@ An empty map looks a little boring, don't you think? Let's add some objects to i
 * Add obstacles generation: houses, trees, etc.
 * Add a map background: grass, or green tiles, blue sky background, ...
 
-> GIF with obstacles on the map
+> `small_house.glb` — Small House by Jarlan Perez [CC-BY](https://creativecommons.org/licenses/by/3.0/) via [Poly Pizza](https://poly.pizza/m/053kskrV4U_).
+
+![](images/game_world.gif)

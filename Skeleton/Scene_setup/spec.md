@@ -11,9 +11,11 @@ In the main entry point `main.js` implement the following:
 
 #### Player
 In the `components` directory, add the `Player.js` file with the following implementation:
+- The player should be represented by a `THREE.Group`.
 - Load a 3D model for the player: `tode.glb` from `public/models/`.
+- Add the model as a child of the `THREE.Group`.
 - Positioning:
-  - Place the model in the center of the scene.
+  - Place the group in the center of the scene.
   - Calculate Z offset to position the model above the ground based on the height of the model.
   - Add model rotation: `model.rotation.x = Math.PI / 2;`
 - Scale model with scalar `20`
@@ -23,8 +25,11 @@ Add player to the main entry point `main.js`.
 #### Camera
 In the `components` directory, add the `Camera.js` file with the following implementation:
 - Perspective camera with field of view `30` degrees and camera's far plane set to `9000`.
-- Set the camera position to `(300, -300, 300)`
-Add camera to the main entry point `main.js`.
+- Set initial camera position to `(300, -300, 300)` and set `camera.up` to `(0, 0, 1)`.
+- Make the camera look at the origin `(0, 0, 0)`.
+
+In the main entry point `main.js`:
+- Add the camera as a child of the player group: `player.add(camera)`.
 
 #### Renderer
 In the `components` directory, add the `Renderer.js` file with the following implementation:
