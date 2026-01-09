@@ -6,3 +6,9 @@ files:
   - name: images/scene.png
     visible: false
     is_binary: true
+  - name: images/lights.png
+    visible: false
+    is_binary: true
+  - name: images/cameras.png
+    visible: false
+    is_binary: true
