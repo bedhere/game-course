@@ -38,25 +38,4 @@ additional_files:
     visible: true
   - name: .junie/guidelines.md
     visible: true
-  - name: game_fin/src/main.js
-  - name: game_fin/src/style.css
-  - name: game_fin/src/components/Map.js
-  - name: game_fin/src/components/Camera.js
-  - name: game_fin/src/components/Houses.js
-  - name: game_fin/src/components/Player.js
-  - name: game_fin/src/components/Monsters.js
-  - name: game_fin/src/components/Renderer.js
-  - name: game_fin/src/colliders.js
-  - name: game_fin/src/gameConfig.js
-  - name: game_fin/src/animatePlayer.js
-  - name: game_fin/src/collectUserInput.js
-  - name: game_fin/public/models/Frog.glb
-  - name: game_fin/public/models/Monster.glb
-  - name: game_fin/public/models/Brown_House.glb
-  - name: game_fin/public/models/Green_House.glb
-  - name: game_fin/public/models/Small_House.glb
-  - name: game_fin/public/vite.svg
-  - name: game_fin/index.html
-  - name: game_fin/package.json
-  - name: game_fin/vite.config.js
 yaml_version: 5
