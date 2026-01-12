@@ -5,19 +5,19 @@ To help you out, we've prepared the agent prompt with some technical things for 
 
 So, what should we focus on?
 
-### Input Collection
+### Input collection
 To make our player move, we need to listen for the user input. Let our hero move using the arrow keys on the keyboard.
 Since several keys might be pressed in quick succession, it's a good practice to save them to a queue. 
 This ensures that every move is processed in the order it was received, making the controls feel responsive and intentional.
 
-### Movement Logic & Jump Animation
+### Movement logic & jump animation
 A simple "teleport" from one point to another doesn't look very natural. 
 To make the movement feel like a hop, we’ll use a bit of math:
 - Progress Tracking: Each move will have a progress value from 0 to 1.
 - The "Jump" Effect: We can use `Math.sin(progress * Math.PI)` to calculate the height (Z-axis). This creates a parabolic arc, making the player lift off the ground and land smoothly.
 - Rotation: We should remember to rotate the player model toward the direction they are moving!
 
-### The Animation Loop
+### The animation loop
 The heart of any game is the **animation loop**. It is responsible for creating the illusion of motion.
 Because 3D objects don't move "on their own," you need a central place to recalculate their positions, 
 rotations, or animations many times per second. 
