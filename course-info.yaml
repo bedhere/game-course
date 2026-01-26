@@ -30,10 +30,13 @@ additional_files:
   - name: utils.js
   - name: game/public/models/tode.glb
     visible: true
+    is_binary: true
   - name: game/public/models/enemy.glb
     visible: true
+    is_binary: true
   - name: game/public/tode.svg
     visible: true
+    is_binary: true
   - name: game/public/models/small_house.glb
     visible: true
   - name: .junie/guidelines.md
