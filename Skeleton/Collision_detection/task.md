@@ -23,10 +23,11 @@ The best time to check for collisions is during the update phase of our animatio
 3. If the path is clear, move. If not, stay put.
 
 ### Tuning the "hitbox"
-Not all models are the same size. and it is not always easy to precisely define the boundaries of models. 
+Not all models are the same size and shape. It is not always easy to precisely define the boundaries of models. 
 We will spend little effort on this for now.
 But to give you fine-grained control, we will use a constant to define the collision distance.
 This allows you to decide if the collision happens the moment the models touch or if they can get a little closer before stopping.
+![](images/bounding_boxes.png)
 
 ### Putting it all together
 Use the specification from the `spec.md` file to implement the collision logic. 

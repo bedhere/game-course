@@ -6,3 +6,6 @@ files:
   - name: images/collision.gif
     visible: false
     is_binary: true
+  - name: images/bounding_boxes.png
+    visible: false
+    is_binary: true
