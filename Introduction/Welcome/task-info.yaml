@@ -1,4 +1,4 @@
 type: theory
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
