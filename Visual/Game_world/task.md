@@ -5,7 +5,7 @@ We’ve prepared the agent prompt with technical details on how to generate the 
 Here is what we’ll be focusing on:
 
 ### Map background
-Start by creating a simple but readable ground. Add a checkerboard floor made from a grid of tiles, where the colors alternate between Dark Green `#228B22` and Light Green `#90EE90`. This gives you instant “game space” and makes movement easier to read.
+Start by creating a simple but readable ground. Add a checkerboard floor made from a grid of tiles, where the colors alternate between Dark Green `#228B22` and Light Green `#90EE90`. This gives you instant "game space" and makes movement easier to read.
 
 ### Obstacles
 Next, let’s make the environment more interesting by placing obstacles. Add a `House.js` file and use the `small_house.glb` model, then place three houses into random positions on the map.
@@ -18,7 +18,7 @@ Finally, these houses should behave like real obstacles. Implement collision det
 Once your map and houses are ready, connect everything in `main.js`. Initialize the map and add it to the scene, then load the houses and add them into the map group so the whole world stays neatly organized.
 
 ### Customize it your way
-Once the basic world is working, feel free to make it more “yours”. You can add different obstacles besides houses, like trees or extra buildings. You can also switch up the map background with grass, green tiles, or a blue-sky style look.
+Once the basic world is working, feel free to make it more "yours". You can add different obstacles besides houses, like trees or extra buildings. You can also switch up the map background with grass, green tiles, or a blue-sky style look.
 
 You can download other free models from places like [poly.pizza](https://poly.pizza/) or [Sketchfab](https://sketchfab.com/), generate your own with AI tools like Nano Banana, or even build them yourself in Blender. Most models you download will come in very different sizes, so don’t worry if something looks huge or tiny at first. Use the model’s `scale` when you load it and tweak it manually until it fits your scene and feels right next to your player and other objects.
 
