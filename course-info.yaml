@@ -10,6 +10,7 @@ content:
   - Skeleton
   - Core_loop
   - Visual
+  - Conclusion
 additional_files:
   - name: package.json
   - name: jsconfig.json
