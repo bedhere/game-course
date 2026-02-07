@@ -1,14 +1,4 @@
 type: theory
 files:
-  - name: spec.md
+  - name: task.js
     visible: true
-  - name: images/run.svg
-    visible: true
-  - name: images/stop.svg
-    visible: true
-  - name: images/scripts.png
-    visible: true
-    is_binary: true
-  - name: images/dev.png
-    visible: true
-    is_binary: true

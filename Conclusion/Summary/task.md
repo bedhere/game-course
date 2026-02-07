@@ -1,5 +1,4 @@
-You’ve done an awesome job! With relatively little effort, you created an entertaining game — and took it from an idea to a fully playable project with clear mechanics and rules.
-
+You’ve done an awesome job! Almost without writing code, you created an entertaining game — and took it from an idea to a fully playable project with clear mechanics and rules.
 Here are the key things you learned during this course.
 ### Takeaways
 - Complex tasks, like building your own game, are best done step by step. In our case, that means splitting the work into small prompts and checking the agent’s result at every step.
