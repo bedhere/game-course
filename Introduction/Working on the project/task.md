@@ -29,7 +29,7 @@ You should see an output similar to this:
   <img src="images/dev.png">
 </div>
 
-Then open the page in your browser — you’ll see a blank stub for now. But soon, that empty world will become Tode’s battlefield!
+Click this URL to open it in your browser — you should see a blank stub for now. But soon, that empty world will become Tode’s battlefield!
 
 ### Stopping the project
 Remember to always stop your application when you're done. Click the ![](images/stop.svg) button in the tool window at the bottom of your IDE or press `^C` (Ctrl+C).
