@@ -11,6 +11,7 @@ Implement player movement with a jump animation controlled by keyboard input.
 - Implement jump logic using `Math.sin(progress * Math.PI)` to adjust the player's height (Z axis).
 - Update player position and rotation based on the current move.
 - Store movement speed, jump height and jump distance in a constant.
+- Keep a reference to the loaded model object and rotate that rather than rotating the player group.
 
 #### Animation Loop Integration
 - Inside `setAnimationLoop`:

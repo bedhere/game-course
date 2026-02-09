@@ -4,11 +4,12 @@ Implement a player attack mechanism.
 
 #### Attack trigger
 - Add a listener for the Space key to trigger an attack.
-- Implement a cooldown between attacks, set in in a constant, initialize with 1 second default value.
+- Implement a cooldown between attacks, set in a constant, initialize with 1 second default value.
 
 #### Visual feedback
 - Visualize the attack using a small yellow circle (`THREE.CircleGeometry` with `MeshBasicMaterial`) around the player.
 - The circle should appear briefly and then disappear or fade out.
+- Place the circle on the ground plane (XY) at a small Z offset (z = 0.25)
 
 #### Combat logic
 - Detect collisions between the attack area and enemies.
