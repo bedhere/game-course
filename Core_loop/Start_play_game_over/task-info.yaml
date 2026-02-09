@@ -1,5 +1,8 @@
 type: theory
 custom_name: Start → playing → game over
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/game_over.gif
+    visible: false
+    is_binary: true

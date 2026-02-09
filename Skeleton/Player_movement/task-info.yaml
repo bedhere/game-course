@@ -1,5 +1,8 @@
 type: theory
 custom_name: Player movement
 files:
-  - name: notes.md
+  - name: spec.md
     visible: true
+  - name: images/movement.gif
+    visible: false
+    is_binary: true
