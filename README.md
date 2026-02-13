@@ -1,4 +1,4 @@
-# game-course
+# Build a Game with Junie Coding Agent
 [![official JetBrains project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <a href="https://academy.jetbrains.com/course/TODO?=fromGitHub" target="_blank">
