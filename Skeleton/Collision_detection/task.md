@@ -1,15 +1,15 @@
 Our hero is moving, and the enemies are in hot pursuit! 
-However, you might have noticed something strange: everyone is ghosting through each other. 
+However, you might have noticed something strange: everyone is "ghosting" through each other. 
 In this task, we will ground our game in reality by implementing collision detection.
 
-We've prepared the agent prompt with technical details on how to handle these physical interactions.
+We've prepared the agent prompt with technical details needed to handle these physical interactions.
 
-So, what are the key concepts for this step?
+Here are the key concepts for this step:
 
 ### Defining boundaries
-In a 3D world, "touching" isn't as simple as it looks. While Three.js offers a simple `Box3` (bounding box), 
-these are often too large and boxy for our rounded characters, leading to "invisible wall" moments. 
-Instead, we want to look at the actual shape of the models to determine where they start and end.
+In a 3D world, "touching" isn't as simple as it looks. While Three.js offers a standard `Box3` (a rectangular bounding box), 
+these can feel too "boxy" for rounded characters, leading to frustrating "invisible wall" moments. 
+Instead, we’ll use the actual geometry of the models to determine where their physical presence begins and ends.
 
 ### Collision rules
 We need to enforce some basic laws of physics for our characters:
@@ -20,21 +20,20 @@ We need to enforce some basic laws of physics for our characters:
 The best time to check for collisions is during the update phase of our animation loop.
 1. Calculate the intended next position for the player or enemy.
 2. Run a check against all other relevant objects in the scene.
-3. If the path is clear, move. If not, stay put.
+3. If the path is clear, the character moves. If an obstacle is in the way, they stay put.
 
 ### Tuning the "hitbox"
-Not all models are the same size and shape. It is not always easy to precisely define the boundaries of models. 
-We will spend little effort on this for now.
-But to give you fine-grained control, we will use a constant to define the collision distance.
-This allows you to decide if the collision happens the moment the models touch or if they can get a little closer before stopping.
+Because 3D models come in many shapes, defining the perfect boundary can be complex. 
+To give you fine-grained control without the headache, we'll use a collision distance constant.
+This allows you to decide exactly how close characters can get before they "hit" each other.
 ![](images/bounding_boxes.png)
 
 ### Putting it all together
-Use the specification from the `spec.md` file to implement the collision logic. 
-It will update the movement methods for both your `Player` and `Enemy` logic to include these safety checks.
+Use the specification in the `spec.md` file to implement the collision logic. 
+It will help you implement the distance-checking logic and integrate it into the existing movement systems for both Tode and the monsters.
 
-Once implemented, your game should feel much more solid: no more overlapping enemies or walking through monsters!
+Once implemented, your game world will feel much more tangible: no more overlapping enemies or walking through monsters!
 ![](images/collision.gif)
 
-Try to adjust the collision distance manually or ask the agent to better understand what customization options you have 
-and make the interface the way you want it.
+Try adjusting the collision distance manually – or ask the agent for help – to explore your customization options
+and refine the game feel exactly the way you want it.
