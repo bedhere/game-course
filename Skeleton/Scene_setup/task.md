@@ -1,57 +1,56 @@
-So, we need to take the first major step: create a scene and place the first object that we will be able to see.
+It's time to take our first major step: creating a scene and placing the very first object we can see.
 
-To make it easier for you to get started, we have added some technical details to the agent prompt. 
+To help you get started, we have added the technical details to the agent prompt. 
 
-So, what do we need to pay attention to?
+Here is what we need to focus on:
 
 ### Scene
-Nothing special, the Three.js library already has a ready-made constructor for the scene. All other objects will be placed on it.
+There's nothing complex here – the Three.js library provides a ready-made constructor for the scene. Think of it as a physical stage where all other objects, lights, and cameras will be placed.
 
 ### Lights
-For good visual results, we need to add minimum two light sources to the scene:
-- **Ambient light** which fills the stage with light.
-- **Directional light** which adds shadows and makes objects truly three-dimensional.
+For good visual results, we need at least two light sources:
+- **Ambient light**: Provides consistent base illumination.
+- **Directional light**: Mimics sunlight to create shadows and highlights, making objects feel truly three-dimensional.
   
-Take a look at the effect of these two light sources at this example:
+Take a look at the effect of these two light sources in this example:
 ![](images/lights.png)
 
 ### Player model
-Next, let's create our hero. Here, we can slightly influence the structure of our project and 
-specify that we want to create a `game/src/components` directory and a `Player` file inside it.
-As the image of our hero, we will use the 3D model `tode.glb` already located in the `game/public/models` directory, 
-but you can draw or find another model for the main character.
+Next, let's create our hero. We’ll organize our project by creating a `Player` file inside the `game/src/components` directory.
+We will use the `tode.glb` 3D model located in the `game/public/models` directory as the character model. 
+Of course, feel free to find or create your own custom model for the main character later!
 
-Note that some models may load rotated (for example, lying on their side), so you might need to fix it manually after loading.
-For example, `frog.rotation.x = Math.PI / 2` (or another angle/axis). 
-You may need to tweak the rotation axis and angle offsets for your specific model until it looks correct or just ask the coding agent to fix it.
+Note that some models may appear rotated (for example, lying on their side) after loading. You can fix this by adjusting the rotation manually.
+You’ll need to tweak the rotation axis and angle (for example, `frog.rotation.x = Math.PI / 2`).
+Don't hesitate to ask the coding agent to handle these offsets for you until it looks correct.
 
 ### Camera
-To be able to see our hero, we need to add a camera to the scene.
-There are two types of cameras: **Orthographic camera** and **Perspective camera**.
-Perspective camera mimics human vision, making distant objects smaller and lines converge, 
-while orthographic camera shows objects at true size regardless of distance, keeping parallel lines parallel.
+To see our hero, we need to add a camera to the scene.
+There are two primary types: **Orthographic Camera** and **Perspective Camera**.
+A perspective camera mimics human vision, making distant objects appear smaller as lines converge in the distance. 
+In contrast, an Orthographic camera renders objects at their true size regardless of distance, keeping parallel lines parallel.
 
 ![](images/cameras.png)
 
-To make our game feel more realistic, we will use a perspective camera. 
-We already suggesting some parameters for it to you in the agent prompt, 
-but feel free to change them and change the camera position.  
+To make our game feel more realistic, we'll use a perspective camera. 
+We've suggested some starting parameters in the prompt, 
+but feel free to experiment with the values and the camera's position to find the perfect view.  
 
 
 ### Rendering
-And the last step is to visualize our scene. This is where the renderer comes to our aid.
-Renderer takes the scene and the camera and converts all 3D data into pixels that appear in the browser window.
+The final step is to visualize our scene. This is where the renderer comes in.
+The renderer takes your scene and your camera and converts all that 3D data into the pixels you see in your browser window.
 
 ### Putting it all together
-Use specification from the `spec.md` file to create a scene with a player model and a camera.
-You can use it as is, or you can tune some parameters to make it look better for you.
+Use the requirements in the `spec.md` file to create your scene with the player and camera.
+You can use the suggested settings as they are or tune the parameters until the scene looks exactly how you want it.
 
-At this stage, you should see our hero in the browser on a white background in the center of the window:
+By the end of this stage, you should see our hero in the center of your browser against a clean background:
 
 ![](images/scene.png)
 
 ### Where to get models?
-In this course, we have prepared several models for you to use, but don't limit yourself to just these.
-- You can always find open models on resources such as [poly.pizza](https://poly.pizza/), [Sketchfab](https://sketchfab.com/), and others.
-- You can generate then with AI models like [Nano Banana](https://openrouter.ai/google/gemini-3-pro-image-preview).
-- Or you can create your own models using 3D modeling software such as [Blender](https://www.blender.org/).
+We have prepared several models for you to use in this course, but don't limit yourself to just these!
+- You can always find free models on resources like [poly.pizza](https://poly.pizza/) or [Sketchfab](https://sketchfab.com/).
+- You can generate 3D assets using AI models like [Nano Banana](https://openrouter.ai/google/gemini-3-pro-image-preview).
+- You can create your own unique models from scratch using professional software like [Blender](https://www.blender.org/).
