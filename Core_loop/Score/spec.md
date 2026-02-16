@@ -3,7 +3,7 @@
 Implement a scoring system that rewards survival time and enemy defeats.
 
 #### Score UI
-- Create a `div` element with class `score` to display the current score.
+- Create a `div` element with the class `score` to display the current score.
 - Position it at the top of the screen via CSS.
 - Update the text content whenever the score changes.
 
