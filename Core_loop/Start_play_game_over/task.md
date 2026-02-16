@@ -1,25 +1,25 @@
-To make the game exciting, we need to handle the loss situation.
+To make the game exciting, we need to define the stakes: what happens when our hero loses?
 
-To make it easier to get started, we’ve prepared the agent prompt with technical details on how to manage game states, detect collisions, and reset the game.
+To help you, we’ve prepared the agent prompt with the technical details needed to manage game states, detect collisions, and reset the game.
 
-So, what are the key points to focus on?
+Here are the key points to focus on:
 
 ### Game Over condition
-Let’s add a game over condition when an enemy touches our hero. This means we should check collisions between the player and enemies, and if a collision happens, we immediately switch the game into the "Game Over" state. This state should have higher priority than any other collision handling — once the hero is hit, nothing else should "override" that outcome. 
+The game ends the moment an enemy touches our hero. This means we should constantly check for collisions between the player and the monsters. If a collision is detected, we immediately trigger the "Game Over" state. This state should take priority over all other collision handling — once the hero is hit, nothing should "override" that outcome. 
 
-One important detail: make sure this collision check runs during gameplay, so enemies can trigger "Game Over" even if the player isn’t moving.
+One important detail: make sure this collision check runs continuously during gameplay so that enemies can trigger a "Game Over" even if the player isn’t moving.
 
 ### Game Over state
-When the player loses, the game should clearly show it and stop reacting like normal gameplay. Display a "Game Over" message at the scene so the player instantly understands what happened.
+When the player loses, the world should stop in its tracks. Display a "Game Over" overlay so the player instantly knows the run has ended.
 
-At the same time, the hero should disappear (either remove the player object or make it invisible), all enemies should stop moving, and any further player actions should be disabled (no movement, no attacks, no input), so the game should feel "frozen".
+At the same time, the hero should disappear (either by removing the player object or making it invisible). All enemies should stop moving, and any further player actions (like movement and attacks) must be disabled. The game should feel "frozen".
 
 ### Reset logic
-A loss shouldn’t be the end — it should be an invitation to try again. Use the **Space** key to reset the game. When **Space** is pressed in the "Game Over" state, reset the player back to the starting position, clear all existing enemies and respawn them at the map corners, reset the score and update the UI, remove the "Game Over" message, and resume the game loop so everything feels ready for a new attempt.
+A loss isn't the end — it's an invitation to try again. We'll use the **Space** key to reset the game. When **Space** is pressed in the "Game Over" state, the game should reset the player back to the starting position, clear all existing enemies and respawn them at the map corners, reset the score and update the UI, remove the "Game Over" message, and resume the game loop. This ensures everything feels fresh and ready for a new attempt.
 
 ### Putting it all together
-Use the specification from the `spec.md` file to implement the "Game Over" flow. By the end of this task, when an enemy touches the hero you should see the game over message, the hero should disappear, enemies should stop moving, and pressing **Space** should reset the game and let you play again.
+Use the specification in the `spec.md` file to implement the "Game Over" flow. By the end of this task, an enemy touching the hero should trigger the "Game Over" message, hide the hero, and stop all enemy movement. Pressing **Space** should then reset the game, allowing you to play again immediately.
 
-Try changing the code manually or ask Junie to better understand what customization options you have. You should get something like this:
+Experiment with the code manually or ask Junie to explore your customization options. Your result should look something like this:
 
 ![](images/game_over.gif)
