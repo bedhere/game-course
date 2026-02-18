@@ -5,6 +5,7 @@ Implement a dynamic difficulty system that scales the game's challenge based on 
 #### Difficulty scaling parameters
 As the score increases, adjust the following parameters:
 - Enemy spawn delay: Decrease the delay between enemy spawns (enemies appear more frequently).
+- Implement enemy spawning with an accumulated timer in the animation loop (advance it with `clock.getDelta()`)
 - Enemy movement speed: Increase enemy speed.
 - Player movement speed: Slightly increase the player's speed.
 - Player attack delay: Decrease the time between player attacks.

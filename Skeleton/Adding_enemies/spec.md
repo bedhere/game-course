@@ -17,5 +17,6 @@ In the `components` directory, create an `Enemy.js` file with the following impl
 
 #### Enemy behavior
 - In the animation loop, update each enemy's position so it moves toward the player's current coordinates.
+- Rotate enemies to face the player while moving (update enemy rotation each frame based on the direction vector in the XY plane). 
 - Store the enemy's moving speed as a constant.
 - At this stage, enemies can overlap with each other and the player.

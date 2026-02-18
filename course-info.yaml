@@ -40,6 +40,9 @@ additional_files:
     is_binary: true
   - name: game/public/models/small_house.glb
     visible: true
+    is_binary: true
   - name: .junie/guidelines.md
+    visible: true
+  - name: game/src/components/readme.md
     visible: true
 yaml_version: 5

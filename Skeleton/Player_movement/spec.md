@@ -11,6 +11,7 @@ Implement player movement system featuring a jump animation controlled by keyboa
 - Implement jump logic using `Math.sin(progress * Math.PI)` to adjust the player's height (the Z-axis).
 - Update the player's position and rotation based on the current move.
 - Store movement speed, jump height, and jump distance as constants.
+- Keep a reference to the loaded model object and rotate that rather than rotating the player group.
 
 #### Animation loop integration
 Inside `setAnimationLoop`:
