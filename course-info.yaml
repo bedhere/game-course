@@ -1,5 +1,5 @@
 type: marketplace
-title: Build a Game with Junie Coding Agent
+title: Build a Game with AI Coding Agent
 language: English
 summary: |-
   <p>Here you can put the course description.</p>
@@ -44,5 +44,7 @@ additional_files:
   - name: .junie/guidelines.md
     visible: true
   - name: game/src/components/readme.md
+    visible: true
+  - name: AGENTS.md
     visible: true
 yaml_version: 5

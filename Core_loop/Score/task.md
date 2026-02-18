@@ -22,6 +22,6 @@ Define two constants: `SCORE_PER_SECOND=0.1` (which equals 1 point per 10 second
 ### Putting it all together
 Use the specification in the `spec.md` file to implement the scoring system. This will handle the time-based calculations, the kill bonuses, and the UI updates.
 
-Feel free to experiment with the code manually or ask Junie for suggestions to further polish the score display. Your results should look like this:
+Feel free to experiment with the code manually or ask a coding agent for suggestions to further polish the score display. Your results should look like this:
 
 ![](images/score.gif)

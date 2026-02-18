@@ -20,6 +20,6 @@ A loss isn't the end — it's an invitation to try again. We'll use the **Space*
 ### Putting it all together
 Use the specification in the `spec.md` file to implement the "Game Over" flow. By the end of this task, an enemy touching the hero should trigger the "Game Over" message, hide the hero, and stop all enemy movement. Pressing **Space** should then reset the game, allowing you to play again immediately.
 
-Experiment with the code manually or ask Junie to explore your customization options. Your result should look something like this:
+Experiment with the code manually or ask a coding agent to explore your customization options. Your result should look something like this:
 
 ![](images/game_over.gif)

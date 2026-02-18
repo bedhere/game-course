@@ -30,7 +30,7 @@ Any new model can be added the same way as the houses: load it, set its scale an
 ### Putting it all together
 Use the requirements in the `spec.md` file to build the game world. It will help you build a tiled background, generate the houses with correct placement, and integrate everything into `main.js`.
 
-Try changing the code manually or asking Junie to better understand your customization options. By the end of this step, your scene should look something like this:
+Try changing the code manually or asking a coding agent to better understand your customization options. By the end of this step, your scene should look something like this:
 ![](images/game_world.gif)
 > `small_house.glb` — Small House by Jarlan Perez [CC-BY](https://creativecommons.org/licenses/by/3.0/) via [Poly Pizza](https://poly.pizza/m/053kskrV4U_).
 

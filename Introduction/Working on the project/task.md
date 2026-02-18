@@ -8,7 +8,7 @@ We won’t overload you with technical details. Each lesson is split into a task
 Take a look at the open `spec.md` file. It’s a short document describing exactly what we expect in this task. You can use it as-is or tweak it to fit your own preferences!
 
 ### Files to know
-You’ll see `.junie/guidelines.md` — it contains general instructions for the AI agent and key points to keep in mind.
+You’ll see `AGENTS.md` — it contains general instructions for the AI coding agent and key points to keep in mind.
 
 In `game/package.json`, you’ll find the mission control for your project: it manages the setup, tooling, and required dependencies (libraries/modules). 
 The most important part right now is `scripts`: this is where we define commands to run the app, run tests, or install dependencies in new modules.
