@@ -2,8 +2,13 @@ type: marketplace
 title: Build a Game with AI Coding Agent
 language: English
 summary: |-
-  <p>Here you can put the course description.</p>
-  <p>You can use <b>HTML tags</b> inside the description.</p>
+  <p>The course is designed for complete beginners with almost no programming experience.</p>
+  <p>With detailed explanations and our tips, you will go through the entire process of creating a JavaScript game using AI coding agents.
+  Follow along with us or create a completely different project of your own. No grades, just your creativity.</p>
+vendor:
+  name: JetBrains s.r.o.
+  email: support@jetbrains.com
+  url: https://www.jetbrains.com/
 programming_language: JavaScript
 content:
   - Introduction
