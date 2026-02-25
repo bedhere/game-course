@@ -8,7 +8,9 @@ Here are the key concepts for this step:
 
 ### Defining boundaries
 In a 3D world, "touching" isn't as simple as it looks. While Three.js offers a standard `Box3` (a rectangular bounding box), 
-these can feel too "boxy" for rounded characters, leading to frustrating "invisible wall" moments. 
+these can feel too "boxy" for rounded characters, leading to frustrating "invisible wall" moments.
+![](images/bounding_boxes.png)
+
 Instead, we’ll use the actual geometry of the models to determine where their physical presence begins and ends.
 
 ### Collision rules
@@ -26,7 +28,6 @@ The best time to check for collisions is during the update phase of our animatio
 Because 3D models come in many shapes, defining the perfect boundary can be complex. 
 To give you fine-grained control without the headache, we'll use a collision distance constant.
 This allows you to decide exactly how close characters can get before they "hit" each other.
-![](images/bounding_boxes.png)
 
 ### Putting it all together
 Use the specification in the `spec.md` file to implement the collision logic. 
