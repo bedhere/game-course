@@ -2,3 +2,75 @@ body {
   margin: 0;
   overflow: hidden;
 }
+
+.game-over {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #ff4444;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: center;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 30px 60px;
+  border-radius: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pause-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: center;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 30px 60px;
+  border-radius: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pause-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 101;
+  font-size: 18px;
+  padding: 8px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+.pause-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.score {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+  font-size: 24px;
+  color: #fff;
+  font-family: sans-serif;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 28px;
+  border-radius: 8px;
+  pointer-events: none;
+  user-select: none;
+}

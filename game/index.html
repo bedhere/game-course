@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/tode.svg" />
     <meta name="viewport" content="width=device-width" />
-    <title>Game</title>
+    <title>3D游戏</title>
   </head>
   <body>
    <canvas class="game"></canvas>
+   <div class="score">分数: 0</div>
+   <button class="pause-btn">⏸ 暂停</button>
+   <div class="pause-overlay" style="display: none;">已暂停<br><span style="font-size: 20px;">按 Esc 继续</span></div>
+   <div class="game-over" style="display: none;">游戏结束<br><span style="font-size: 20px;">按空格键重新开始</span></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
