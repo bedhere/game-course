@@ -48,10 +48,12 @@ let lastX = 0;
 let lastY = 0;
 
 window.addEventListener('mousedown', (e) => {
-  if (e.button === 0) {
+  if (e.button === 2) {
     orbitEnabled = !orbitEnabled;
   }
 });
+
+window.addEventListener('contextmenu', (e) => e.preventDefault());
 
 window.addEventListener('mousemove', (e) => {
   if (!orbitEnabled) {

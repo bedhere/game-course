@@ -28,9 +28,6 @@ scene.add(player);
 // Camera added to scene (follows player via updateCamera)
 scene.add(camera);
 
-// Initialize enemy system
-initEnemies(scene);
-
 // Initialize houses
 initHouses(scene);
 
@@ -38,10 +35,12 @@ initHouses(scene);
 let gameOver = false;
 let paused = false;
 let score = 0;
+let enemiesEnabled = false;
 const overlay = document.querySelector('.game-over');
 const pauseBtn = document.querySelector('.pause-btn');
 const pauseOverlay = document.querySelector('.pause-overlay');
 const scoreDiv = document.querySelector('.score');
+scoreDiv.style.display = 'none';
 
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -55,27 +54,30 @@ renderer.setAnimationLoop((time) => {
   if (!gameOver && !paused) {
     getNextMove();
     update(deltaTime);
-    updateEnemies(deltaTime, player);
 
-    // Survival score: 0.1 point per second
-    score += 0.1 * deltaTime;
+    if (enemiesEnabled) {
+      updateEnemies(deltaTime, player);
 
-    // Attack: remove enemies within attack radius
-    const radius = consumeAttack();
-    if (radius > 0) {
-      const killed = removeEnemiesInRadius(player.position.x, player.position.y, radius);
-      score += killed * 10; // 10 points per kill
+      // Survival score: 0.1 point per second
+      score += 0.1 * deltaTime;
+
+      // Attack: remove enemies within attack radius
+      const radius = consumeAttack();
+      if (radius > 0) {
+        const killed = removeEnemiesInRadius(player.position.x, player.position.y, radius);
+        score += killed * 10; // 10 points per kill
+      }
+
+      // Check Game Over: player colliding with any enemy
+      if (isPositionBlocked(player.position.x, player.position.y)) {
+        gameOver = true;
+        player.visible = false;
+        overlay.style.display = 'block';
+      }
+
+      // Update score display
+      scoreDiv.textContent = '分数: ' + Math.floor(score);
     }
-
-    // Check Game Over: player colliding with any enemy
-    if (isPositionBlocked(player.position.x, player.position.y)) {
-      gameOver = true;
-      player.visible = false;
-      overlay.style.display = 'block';
-    }
-
-    // Update score display
-    scoreDiv.textContent = '分数: ' + Math.floor(score);
   }
 
   // Smooth camera follow
@@ -91,10 +93,12 @@ window.addEventListener('keydown', (e) => {
     gameOver = false;
     overlay.style.display = 'none';
     score = 0;
-    scoreDiv.textContent = '分数: 0';
     resetPlayer();
-    clearAllEnemies();
-    respawnEnemies();
+    if (enemiesEnabled) {
+      scoreDiv.textContent = '分数: 0';
+      clearAllEnemies();
+      respawnEnemies();
+    }
     clearAllHouses();
     respawnHouses(scene);
   }
@@ -114,5 +118,16 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
     togglePause();
+  }
+  if (e.key === 't' || e.key === 'T') {
+    enemiesEnabled = !enemiesEnabled;
+    scoreDiv.style.display = enemiesEnabled ? 'block' : 'none';
+    if (enemiesEnabled) {
+      initEnemies(scene);
+      score = 0;
+      scoreDiv.textContent = '分数: 0';
+    } else {
+      clearAllEnemies();
+    }
   }
 });

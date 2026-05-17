@@ -4,9 +4,9 @@ import { isPositionBlocked } from './Enemy.js';
 import { isHouseBlocked } from './House.js';
 import { getCameraTheta } from './Camera.js';
 
-const MOVE_SPEED = 2;
-const JUMP_HEIGHT = 50;
-const JUMP_DISTANCE = 100;
+const MOVE_SPEED = 200;
+const JUMP_HEIGHT = 125; // 1.25 blocks
+const JUMP_DURATION = 0.8; // seconds for full arc
 
 const ATTACK_COOLDOWN = 1;
 const ATTACK_RADIUS = 60;
@@ -17,32 +17,39 @@ let model = null;
 let modelWrapper = null;
 let attackIndicator = null;
 
-const inputQueue = [];
-let currentMove = null;
+// Track currently held keys
+const keysHeld = new Set();
+
+// Jump state
+let isJumping = false;
+let jumpTime = 0;
 
 // Attack state
 let cooldownTimer = 0;
 let attackTimer = 0;
 let attackTriggered = false;
 
-// Map keys to movement direction (angles computed from camera view)
-const keyMap = {
-  w: 'forward',
-  s: 'backward',
-  a: 'left',
-  d: 'right',
-  ArrowUp: 'forward',
-  ArrowDown: 'backward',
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
-};
-
 window.addEventListener('keydown', (e) => {
-  if (e.key in keyMap) {
+  if (['w', 's', 'a', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
     e.preventDefault();
-    inputQueue.push(keyMap[e.key]);
+    keysHeld.add(e.key);
   }
   if (e.key === ' ') {
+    e.preventDefault();
+    if (!isJumping) {
+      isJumping = true;
+      jumpTime = 0;
+    }
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  keysHeld.delete(e.key);
+});
+
+// Left mouse button = attack
+window.addEventListener('mousedown', (e) => {
+  if (e.button === 0) {
     e.preventDefault();
     if (cooldownTimer <= 0 && attackTimer <= 0) {
       attackTriggered = true;
@@ -50,16 +57,23 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Convert a named direction to an angle based on camera orientation
-function directionToAngle(dir) {
+// Convert held keys to a movement vector in world space
+function getMovementVector() {
   const theta = getCameraTheta();
-  switch (dir) {
-    case 'forward':  return theta;                // toward camera look
-    case 'backward': return theta + Math.PI;      // away from camera
-    case 'left':     return theta + Math.PI / 2;  // left of camera
-    case 'right':    return theta - Math.PI / 2;  // right of camera
-    default:         return 0;
-  }
+  // Forward/backward along camera view direction
+  const forward = new THREE.Vector2(Math.cos(theta), Math.sin(theta));
+  // Right is 90° clockwise from forward
+  const right = new THREE.Vector2(forward.y, -forward.x);
+
+  const dir = new THREE.Vector2(0, 0);
+
+  if (keysHeld.has('w') || keysHeld.has('ArrowUp'))    dir.sub(forward);
+  if (keysHeld.has('s') || keysHeld.has('ArrowDown'))  dir.add(forward);
+  if (keysHeld.has('d') || keysHeld.has('ArrowRight')) dir.sub(right);
+  if (keysHeld.has('a') || keysHeld.has('ArrowLeft'))  dir.add(right);
+
+  if (dir.lengthSq() > 0) dir.normalize();
+  return dir;
 }
 
 const loader = new GLTFLoader();
@@ -92,53 +106,37 @@ loader.load('/models/tode.glb', (gltf) => {
 });
 
 /**
- * Pull next input from queue and start a new move if idle
- * and the destination is not blocked by enemies.
- */
-function getNextMove() {
-  if (!currentMove && inputQueue.length > 0) {
-    const dirName = inputQueue.shift();
-    const direction = directionToAngle(dirName);
-    const targetX = playerGroup.position.x + Math.cos(direction) * JUMP_DISTANCE;
-    const targetY = playerGroup.position.y + Math.sin(direction) * JUMP_DISTANCE;
-
-    if (!isPositionBlocked(targetX, targetY) && !isHouseBlocked(targetX, targetY)) {
-      currentMove = {
-        direction,
-        progress: 0,
-        startX: playerGroup.position.x,
-        startY: playerGroup.position.y,
-      };
-    }
-  }
-}
-
-/**
- * Advance the current move and manage attack timers.
+ * Advance movement and manage attack timers.
  * Returns the attack radius if an attack just triggered, otherwise 0.
  */
 function update(deltaTime) {
-  // --- Movement ---
-  if (currentMove) {
-    currentMove.progress += deltaTime * MOVE_SPEED;
+  // --- Jump ---
+  if (isJumping) {
+    jumpTime += deltaTime / JUMP_DURATION;
+    if (jumpTime >= 1) {
+      jumpTime = 1;
+      isJumping = false;
+    }
+    // Parabolic arc: peaks at jumpTime=0.5
+    playerGroup.position.z = 4 * JUMP_HEIGHT * jumpTime * (1 - jumpTime);
+  } else {
+    playerGroup.position.z = 0;
+  }
 
-    if (currentMove.progress >= 1) {
-      const dir = currentMove.direction;
-      playerGroup.position.x = currentMove.startX + Math.cos(dir) * JUMP_DISTANCE;
-      playerGroup.position.y = currentMove.startY + Math.sin(dir) * JUMP_DISTANCE;
-      playerGroup.position.z = 0;
-      currentMove = null;
-    } else {
-      const dir = currentMove.direction;
-      const progress = currentMove.progress;
+  // --- Continuous movement ---
+  const dir = getMovementVector();
+  if (dir.lengthSq() > 0) {
+    const newX = playerGroup.position.x + dir.x * MOVE_SPEED * deltaTime;
+    const newY = playerGroup.position.y + dir.y * MOVE_SPEED * deltaTime;
 
-      playerGroup.position.z = Math.sin(progress * Math.PI) * JUMP_HEIGHT;
-      playerGroup.position.x = currentMove.startX + Math.cos(dir) * JUMP_DISTANCE * progress;
-      playerGroup.position.y = currentMove.startY + Math.sin(dir) * JUMP_DISTANCE * progress;
+    if (!isPositionBlocked(newX, newY) && !isHouseBlocked(newX, newY)) {
+      playerGroup.position.x = newX;
+      playerGroup.position.y = newY;
+    }
 
-      if (modelWrapper) {
-        modelWrapper.rotation.z = dir + Math.PI / 2;
-      }
+    // Rotate model to face movement direction
+    if (modelWrapper) {
+      modelWrapper.rotation.z = Math.atan2(dir.y, dir.x) + Math.PI / 2;
     }
   }
 
@@ -182,12 +180,16 @@ function consumeAttack() {
 function resetPlayer() {
   playerGroup.position.set(0, 0, 0);
   playerGroup.visible = true;
-  inputQueue.length = 0;
-  currentMove = null;
+  keysHeld.clear();
+  isJumping = false;
+  jumpTime = 0;
   cooldownTimer = 0;
   attackTimer = 0;
   attackTriggered = false;
   if (attackIndicator) attackIndicator.visible = false;
 }
+
+// getNextMove is no longer needed but kept for API compatibility
+function getNextMove() {}
 
 export { playerGroup as default, getNextMove, update, consumeAttack, resetPlayer };
