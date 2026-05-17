@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import './style.css';
 import player, { getNextMove, update, consumeAttack, resetPlayer } from './components/Player.js';
-import camera from './components/Camera.js';
+import camera, { updateCamera } from './components/Camera.js';
 import renderer from './components/Renderer.js';
 import { init as initEnemies, update as updateEnemies, removeEnemiesInRadius, isPositionBlocked, clearAllEnemies, respawnEnemies } from './components/Enemy.js';
 import map from './components/Map.js';
@@ -25,8 +25,8 @@ scene.add(map);
 // Add player to scene
 scene.add(player);
 
-// Attach camera to player
-player.add(camera);
+// Camera added to scene (follows player via updateCamera)
+scene.add(camera);
 
 // Initialize enemy system
 initEnemies(scene);
@@ -77,6 +77,9 @@ renderer.setAnimationLoop((time) => {
     // Update score display
     scoreDiv.textContent = '分数: ' + Math.floor(score);
   }
+
+  // Smooth camera follow
+  updateCamera(player.position);
 
   renderer.render(scene, camera);
 });

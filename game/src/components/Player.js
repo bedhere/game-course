@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { isPositionBlocked } from './Enemy.js';
 import { isHouseBlocked } from './House.js';
+import { getCameraTheta } from './Camera.js';
 
 const MOVE_SPEED = 2;
 const JUMP_HEIGHT = 50;
@@ -24,22 +25,22 @@ let cooldownTimer = 0;
 let attackTimer = 0;
 let attackTriggered = false;
 
-// Map keys to movement direction angles (in XY plane)
-const directionMap = {
-  ArrowUp: Math.PI / 2,
-  ArrowDown: -Math.PI / 2,
-  ArrowLeft: Math.PI,
-  ArrowRight: 0,
-  w: Math.PI / 2,
-  s: -Math.PI / 2,
-  a: Math.PI,
-  d: 0,
+// Map keys to movement direction (angles computed from camera view)
+const keyMap = {
+  w: 'forward',
+  s: 'backward',
+  a: 'left',
+  d: 'right',
+  ArrowUp: 'forward',
+  ArrowDown: 'backward',
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
 };
 
 window.addEventListener('keydown', (e) => {
-  if (e.key in directionMap) {
+  if (e.key in keyMap) {
     e.preventDefault();
-    inputQueue.push(directionMap[e.key]);
+    inputQueue.push(keyMap[e.key]);
   }
   if (e.key === ' ') {
     e.preventDefault();
@@ -48,6 +49,18 @@ window.addEventListener('keydown', (e) => {
     }
   }
 });
+
+// Convert a named direction to an angle based on camera orientation
+function directionToAngle(dir) {
+  const theta = getCameraTheta();
+  switch (dir) {
+    case 'forward':  return theta;                // toward camera look
+    case 'backward': return theta + Math.PI;      // away from camera
+    case 'left':     return theta + Math.PI / 2;  // left of camera
+    case 'right':    return theta - Math.PI / 2;  // right of camera
+    default:         return 0;
+  }
+}
 
 const loader = new GLTFLoader();
 loader.load('/models/tode.glb', (gltf) => {
@@ -84,7 +97,8 @@ loader.load('/models/tode.glb', (gltf) => {
  */
 function getNextMove() {
   if (!currentMove && inputQueue.length > 0) {
-    const direction = inputQueue.shift();
+    const dirName = inputQueue.shift();
+    const direction = directionToAngle(dirName);
     const targetX = playerGroup.position.x + Math.cos(direction) * JUMP_DISTANCE;
     const targetY = playerGroup.position.y + Math.sin(direction) * JUMP_DISTANCE;
 

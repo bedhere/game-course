@@ -1,2 +1,0 @@
-- Make changes in the `game` directory only
-- Don't look for or run tests
